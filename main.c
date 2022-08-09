@@ -6,6 +6,11 @@
 int main(void)
 {
 	Buffer_t *b = buffer_create_from_string("DDDDCCCCBBBBAAAA");
+	/* buffer_load_from_string(b ,"AAABBBCCC"); */
+
+	char *str = buffer_write_to_string(b);
+	printf("output str: %s\n", str);
+	return 0;
 
 	buffer_print(b);
 	buffer_free(b);

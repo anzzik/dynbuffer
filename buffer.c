@@ -155,6 +155,12 @@ int buffer_load_from_file(Buffer_t *b, const char* path)
 	return 0;
 }
 
+int buffer_load_from_string(Buffer_t *b, char* str)
+{
+	buffer_clear(b);
+	return buffer_insert_at_offset(b, 0, str, strlen(str));
+}
+
 int buffer_insert_at(Buffer_t *b, int index, char *data, size_t size)
 {
 	int chunks_needed = size / CHUNK_SZ;
@@ -373,6 +379,22 @@ int  buffer_write_to_file(Buffer_t *b, const char* path)
 	fclose(fp);
 
 	return 0;
+}
+
+char *buffer_write_to_string(Buffer_t *b)
+{
+	Chunk_t *c = b->c_head;
+	size_t offset = 0;
+	char *ob_str = calloc(sizeof(b->b_size) + 1, sizeof(char));
+
+	while (c)
+	{
+		memcpy(ob_str + offset, c->data, c->size);
+		offset += c->size;
+		c = c->next;
+	}
+
+	return ob_str;
 }
 
 void buffer_clear(Buffer_t *b)
