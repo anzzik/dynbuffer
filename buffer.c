@@ -42,10 +42,16 @@ void chunk_print(Chunk_t *c)
 void buffer_append_char(Buffer_t *b, char ch)
 {
 	Chunk_t *c = b->c_head;
-	while (c->next)
+	while (c && c->next)
 		c = c->next;
 
-	if (c->size < CHUNK_SZ)
+	if (!c || c->size == CHUNK_SZ)
+	{
+		char s[2] = {'\0'};
+		sprintf(s, "%c", ch);
+		buffer_append(b, s, 1);
+	}
+	else
 	{
 		c->data[c->size] = ch;
 		c->data[c->size + 1] = '\0';
@@ -53,12 +59,6 @@ void buffer_append_char(Buffer_t *b, char ch)
 		c->size++;
 		c->e_offset++;
 		b->b_size++;
-	}
-	else
-	{
-		char s[2] = {'\0'};
-		sprintf(s, "%c", ch);
-		buffer_append(b, s, 1);
 	}
 }
 
