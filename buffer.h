@@ -26,11 +26,12 @@ typedef struct Buffer_s
 } Buffer_t;
 
 /* API */
-Buffer_t *buffer_new();
-void buffer_free(Buffer_t *b);
 
 void buffer_clear(Buffer_t *b);
+Buffer_t *buffer_create_empty();
+Buffer_t *buffer_create_from_string(char *str);
 int  buffer_delete_data_at_offset(Buffer_t *b, size_t offset, size_t size);
+void buffer_free(Buffer_t *b);
 int  buffer_get_data_at_offset(Buffer_t *b, size_t offset, size_t size, char* ob);
 int  buffer_insert_at_offset(Buffer_t *b, size_t offset, char *data, size_t size);
 int  buffer_load_from_file(Buffer_t *b, const char* path);
@@ -44,6 +45,7 @@ Chunk_t *chunk_new(char* c_data, size_t c_size);
 void     chunk_free(Chunk_t *c);
 void     chunk_print(Chunk_t *c);
 
+Buffer_t *buffer_new();
 int  buffer_append(Buffer_t* b, char *data, size_t size);
 int  buffer_create_chunk(Buffer_t* b, int index, char *data, size_t size);
 void buffer_foreach_chunk(Buffer_t *b, void* data, void (cb_fn(Chunk_t*, void*)));

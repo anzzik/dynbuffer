@@ -21,7 +21,7 @@ Chunk_t *chunk_new(char* c_data, size_t c_size)
 
 void chunk_free(Chunk_t *c)
 {
-	printf("Chunk #%d freed (%d bytes).\n", c->index, c->size);
+	printf("Chunk #%d freed (%lu bytes).\n", c->index, c->size);
 	free(c->data);
 	free(c);
 }
@@ -51,9 +51,23 @@ Buffer_t *buffer_new()
 	return b;
 }
 
+Buffer_t *buffer_create_empty()
+{
+	Buffer_t *b = buffer_new();
+	return b;
+}
+
+Buffer_t *buffer_create_from_string(char *str)
+{
+	Buffer_t *b = buffer_create_empty();
+	buffer_insert_at_offset(b, 0, str, strlen(str));
+
+	return b;
+}
+
 void buffer_free(Buffer_t *b)
 {
-	printf("Freeing %d byte buffer.\n", b->b_size);
+	printf("Freeing %lu byte buffer.\n", b->b_size);
 	buffer_foreach_chunk(b, 0, (void (*)(Chunk_t*, void*))chunk_free);
 	free(b);
 }
@@ -90,7 +104,7 @@ int buffer_insert_at_offset(Buffer_t *b, size_t offset, char *data, size_t size)
 			return 0;
 		}
 
-		fprintf(stderr, "No chunk found at offset %d\n", offset);
+		fprintf(stderr, "No chunk found at offset %lu\n", offset);
 		return -1;
 	}
 
@@ -162,6 +176,8 @@ int buffer_insert_at(Buffer_t *b, int index, char *data, size_t size)
 
 		buffer_create_chunk(b, index, (data + offset), len);
 	}
+
+	return 0;
 }
 
 int buffer_append(Buffer_t* b, char *data, size_t size)
@@ -177,8 +193,6 @@ int buffer_prepend(Buffer_t* b, char *data, size_t size)
 void buffer_recalc_indexes(Buffer_t *b)
 {
 	Chunk_t **it = &b->c_head;
-	Chunk_t *c = b->c_head;
-	int i = 0;
 	size_t b_offset = 0;
 
 	b->c_count = 0;
@@ -216,6 +230,8 @@ Chunk_t *buffer_get_chunk_at_index(Buffer_t *b, int index)
 
 		c = c->next;
 	}
+
+	return 0;
 }
 
 Chunk_t *buffer_get_chunk_at_offset(Buffer_t *b, size_t offset)
@@ -321,7 +337,6 @@ int buffer_replace_data_at_offset(Buffer_t *b, size_t offset, char* data, size_t
 int  buffer_write_to_file(Buffer_t *b, const char* path)
 {
 	FILE  *fp;
-	size_t f_size;
 	size_t bytes_written;
 	char  *data_buf;
 
@@ -374,7 +389,6 @@ int buffer_delete_data_at_offset(Buffer_t *b, size_t offset, size_t size)
 	Chunk_t *c_first   = buffer_get_chunk_at_offset(b, offset);
 	Chunk_t *c_last    = buffer_get_chunk_at_offset(b, offset + size - 1);
 	Chunk_t *c_current = c_first;
-	size_t   ob_offset = 0;
 
 	if (!c_first || !c_last)
 	{
@@ -446,7 +460,7 @@ void buffer_print(Buffer_t *b)
 		c = c->next;
 	}
 
-	printf("\nTotal buffer size: %d bytes, %d chunks.\n", b->b_size, b->c_count);
+	printf("\nTotal buffer size: %lu bytes, %d chunks.\n", b->b_size, b->c_count);
 }
 
 int buffer_split_chunk(Buffer_t *b, Chunk_t *c, size_t offset)
@@ -464,6 +478,8 @@ int buffer_split_chunk(Buffer_t *b, Chunk_t *c, size_t offset)
 	c->size = strlen(s);
 
 	buffer_recalc_indexes(b);
+
+	return 0;
 }
 
 void buffer_foreach_chunk(Buffer_t *b, void* data, void (cb_fn(Chunk_t*, void*)))

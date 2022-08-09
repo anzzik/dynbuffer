@@ -5,14 +5,11 @@
 
 int main(void)
 {
-	Buffer_t *b = buffer_new();
+	Buffer_t *b = buffer_create_from_string("DDDDCCCCBBBBAAAA");
 
-	buffer_append(b, "AAAA", 4);
-	buffer_append(b, "BBBB", 4);
-	buffer_append(b, "CCCC", 4);
-	buffer_append(b, "DDDD", 4);
-	buffer_append(b, "EEEE", 4);
-	buffer_append(b, "FFFF", 4);
+	buffer_print(b);
+	buffer_free(b);
+	return 0;
 
 	buffer_load_from_file(b, "testfile.txt");
 	buffer_write_to_file(b, "testfile_wr.txt");
