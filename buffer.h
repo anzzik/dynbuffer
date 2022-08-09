@@ -27,6 +27,7 @@ typedef struct Buffer_s
 
 /* API */
 
+void buffer_append_char(Buffer_t *b, char ch);
 void buffer_clear(Buffer_t *b);
 Buffer_t *buffer_create_empty();
 Buffer_t *buffer_create_from_string(char *str);
