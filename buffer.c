@@ -21,7 +21,7 @@ Chunk_t *chunk_new(char* c_data, size_t c_size)
 
 void chunk_free(Chunk_t *c)
 {
-	printf("Chunk #%d freed (%lu bytes).\n", c->index, c->size);
+	fprintf(stderr, "Chunk #%d freed (%lu bytes).\n", c->index, c->size);
 	free(c->data);
 	free(c);
 }
@@ -90,7 +90,7 @@ Buffer_t *buffer_create_from_string(char *str)
 
 void buffer_free(Buffer_t *b)
 {
-	printf("Freeing %lu byte buffer.\n", b->b_size);
+	fprintf(stderr, "Freeing %lu byte buffer.\n", b->b_size);
 	buffer_foreach_chunk(b, 0, (void (*)(Chunk_t*, void*))chunk_free);
 	free(b);
 }
@@ -236,7 +236,7 @@ void buffer_recalc_indexes(Buffer_t *b)
 		if ((*it)->size == 0)
 		{
 			Chunk_t *f = *it;
-			printf("0 sized chunk at index %d.\n", f->index);
+			fprintf(stderr, "0 sized chunk at index %d.\n", f->index);
 
 			*it = (*it)->next;
 			chunk_free(f);
