@@ -34,6 +34,7 @@ Buffer_t *buffer_create_from_string(char *str);
 int  buffer_delete_data_at_offset(Buffer_t *b, size_t offset, size_t size);
 void buffer_free(Buffer_t *b);
 int  buffer_get_data_at_offset(Buffer_t *b, size_t offset, size_t size, char* ob);
+int  buffer_get_str_to_eol(Buffer_t *b, size_t offset, char* ob);
 int  buffer_insert_at_offset(Buffer_t *b, size_t offset, char *data, size_t size);
 int  buffer_load_from_file(Buffer_t *b, const char* path);
 int  buffer_load_from_string(Buffer_t *b, char* str);

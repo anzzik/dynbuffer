@@ -328,6 +328,47 @@ int buffer_get_data_at_offset(Buffer_t *b, size_t offset, size_t size, char* ob)
 	return 0;
 }
 
+int buffer_get_str_to_eol(Buffer_t *b, size_t offset, char* ob)
+{
+	Chunk_t *c_first   = buffer_get_chunk_at_offset(b, offset);
+	Chunk_t *c_current = c_first;
+	size_t ob_offset = 0;
+	int ready = 0;
+
+	while (c_current)
+	{
+		size_t c_offset = offset - c_current->s_offset;
+		size_t chunk_l = c_current->size - c_offset;
+
+		for (int i = 0; i < chunk_l; i++)
+		{
+			ob[ob_offset++] = c_current->data[c_offset + i];
+			if (c_current->data[c_offset + i] == 10)
+			{
+				ready = 1;
+				break;
+			}
+
+			if (c_current->data[c_offset + i] == 0)
+			{
+				ob_offset--;
+				ready = 1;
+				break;
+			}
+		}
+
+		if (ready)
+			break;
+
+		offset    = c_current->s_offset + chunk_l;
+		c_current = c_current->next;
+	}
+
+	ob[ob_offset] = 0;
+
+	return ob_offset;
+}
+
 int buffer_replace_data_at_offset(Buffer_t *b, size_t offset, char* data, size_t size)
 {
 	Chunk_t *c_first   = buffer_get_chunk_at_offset(b, offset);
