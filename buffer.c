@@ -408,7 +408,7 @@ char *buffer_write_to_string(Buffer_t *b)
 {
 	Chunk_t *c = b->c_head;
 	size_t offset = 0;
-	char *ob_str = calloc(sizeof(b->b_size) + 1, sizeof(char));
+	char *ob_str = calloc(b->b_size + 1, sizeof(char));
 
 	while (c)
 	{
